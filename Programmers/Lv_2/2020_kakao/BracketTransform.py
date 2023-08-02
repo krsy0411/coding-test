@@ -25,7 +25,7 @@ def division(p):
       if i+1 < len(p):
         v = p[i+1:]
       else:
-        ""
+        v = ""
       break
 
   return [u,v]
@@ -80,7 +80,6 @@ def recursive(p):
         temp += ")"
       else:
         temp += "("
-
     result += temp
 
   return result
