@@ -4,11 +4,11 @@ n = int(input())
 data = list(map(int, input().split()))
 data.sort()
 
-result = 1
+target = 1
 # 처리 과정
 for i in data:
-    if (i > result):
+    if (i > target):
         break
-    result += i
+    target += i
 
-print(result)
+print(target)
