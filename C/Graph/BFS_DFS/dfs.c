@@ -73,7 +73,7 @@ int main(void)
 	insert_edge(g, 2, 3);
 
 	printf("깊이 우선 탐색\n");
-	dfs_mat(g, 0);
+	DFS(g, 0);
 	printf("\n");
 	free(g);
 	return 0;
