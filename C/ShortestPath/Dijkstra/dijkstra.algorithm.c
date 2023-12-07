@@ -7,12 +7,12 @@
 #define MAX_VERTICES 100 // 최대 정점 개수
 #define INF	1000000 // 무한대를 의미하는 수
 
-typedef struct GraphType {
+typedef struct Graph {
     // 노드 개수
     int node_cnt;
     // 가중치
-    int weight[MAX_VERTICES][MAX_VERTICES];
-} GraphType;
+    int weight[MAX_VERTICES][MAX_VERTICES]; // 인접행렬 방식
+} Graph;
 
 /* 시작정점으로부터의 최단경로 거리 */
 int distance[MAX_VERTICES];
@@ -35,7 +35,7 @@ int choose_smallest_index(int distance[], int n, int found[]) {
     return minPosition;
 }
 
-void print_status(GraphType* graph) {
+void print_status(Graph* graph) {
     printf("distance: ");
 
     for(int i=0; i<graph->node_cnt; i++) {
@@ -49,7 +49,7 @@ void print_status(GraphType* graph) {
 }
 
 // 초기화 함수
-void init(GraphType* graph, int startNumber) {
+void init(Graph* graph, int startNumber) {
     for(int i=0; i<graph->node_cnt; i++) {
         // 해당 노드와 연결된 노드는 해당노드까지의 거리 + 간선거리니까 우선 해당노드까지의 거리로 입력
         distance[i] = graph->weight[startNumber][i];
@@ -58,7 +58,7 @@ void init(GraphType* graph, int startNumber) {
     }
 }
 
-void shortest_path(GraphType* graph, int startNodeNumber) {
+void shortest_path(Graph* graph, int startNodeNumber) {
     int array[10] = {1,};
     // 초기화
     init(graph, startNodeNumber);
@@ -88,7 +88,8 @@ void shortest_path(GraphType* graph, int startNodeNumber) {
 }
 
 int main(void) {
-    GraphType g = { 10,
+    // 인접행렬 방식
+    Graph g = { 10,
         // 각 노드들 순서대로 가중치 표현
         {{ 0, 3, INF, INF, INF, 11, 12,INF,INF,INF },
         { 3,  0, 5, 4, 1, 7, 8,INF,INF,INF },
