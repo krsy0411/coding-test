@@ -27,6 +27,7 @@ void printArray(int array[]) {
 void bubbleSort(int array[]) {
     for(int i=SIZE-1; i>0; i--) {
         for(int j=0; j<i; j++) {
+            // 인접한 값 두개를 비교해가며 작은 인덱스에 해당하는 값이 더 크다면 서로 스왑하여 위치 변경
             if(array[j] > array[j+1]) {
                 swap(&array[j], &array[j+1]);
             }
