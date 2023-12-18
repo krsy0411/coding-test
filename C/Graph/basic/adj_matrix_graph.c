@@ -38,7 +38,7 @@ void insert_edge(GraphType* graph, int start, int end) {
         return;
     }
     graph->adj_matrix[start][end] = 1;
-    graph->adj_matrix[start][end] = 1;
+    graph->adj_matrix[end][start] = 1;
 }
 
 void print_adj_matrix(GraphType* graph) {
