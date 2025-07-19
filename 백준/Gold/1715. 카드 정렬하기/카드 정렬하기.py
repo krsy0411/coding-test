@@ -1,20 +1,19 @@
-import sys
+# 백준 1655 : 카드 정렬하기
 import heapq
+import sys
+input = sys.stdin.readline
 
-result = 0
-n = int(input())
+N = int(input().strip())
+pq = [int(input().strip()) for _ in range(N)] 
+heapq.heapify(pq) # 힙 만들기 : 최소힙
 
-data_list = []
-for _ in range(n):
-  data_list.append(int(sys.stdin.readline().rstrip()))
-data_list.sort()
-
-heapq.heapify(data_list)
-while len(data_list) != 1:
-  # 파이썬에서 힙 라이브러리는 최소힙이므로 항상 최상단 노드가 최솟값이다
-  first = heapq.heappop(data_list)
-  second = heapq.heappop(data_list)
-  heapq.heappush(data_list, first+second)
-  result += (first+second)
-
+result = 0 # 최소한의 비교횟수
+while len(pq) > 1:
+    num_first = heapq.heappop(pq)
+    num_second = heapq.heappop(pq)
+    temp_sum = num_first + num_second
+    result += temp_sum
+    
+    heapq.heappush(pq, temp_sum)
+    
 print(result)
