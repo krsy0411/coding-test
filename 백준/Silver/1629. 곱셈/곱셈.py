@@ -1,17 +1,16 @@
 import sys
 input = sys.stdin.readline
 
-A,B,C = map(int, input().split())
+A,B,C = map(int, input().strip().split())
 
-def recursive_modular_exp(a, b, c):
-    if b == 0:
-        return 1
+def hyper_exp(base, n, mod_num):
+	if n == 0:
+		return 1
+	
+	half = hyper_exp(base, n // 2, mod_num)
+	if n % 2 == 0:
+		return (half * half) % mod_num
+	else:
+		return (base * half * half) % mod_num
 
-    half = recursive_modular_exp(a, b // 2, c)
-    if b % 2 == 0:
-        return (half * half) % c
-    else:
-        return (half * half * a) % c
-
-result = recursive_modular_exp(A, B, C)
-print(result)
+print(hyper_exp(A,B,C))
