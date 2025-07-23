@@ -1,54 +1,57 @@
-# 백준 6549 : 히스토그램에서 가장 큰 직사각형
 import sys
-sys.setrecursionlimit(10000)
 input = sys.stdin.readline
 
-inputs = []
+result = [] # 결과 출력용 리스트
+inputs = [] # 입력 라인 저장용
 while True:
-    line = input().strip()
-    
-    if line == '0':
-        break
-    
-    line = list(map(int, line.split()))
-    arr = line[1:]
-    inputs.append(arr)
+	line = input().strip().split()
+	if line == ['0']:
+		break
+	
+	n = int(line[0]) 
+	arr = list(map(int, line[1:]))
+	inputs.append((n, arr)) # 튜플 형태 : (직사각형 수, n개의 높이 배열)
+	
+# 중간에 겹치는 영역에 대한 크기를 구하는 함수
+def get_crossing_size(arr, left_idx, right_idx, mid_idx):
+	max_size = arr[mid_idx]
+	min_height = arr[mid_idx]
+	
+	l = mid_idx
+	r = mid_idx
+	while left_idx < l or right_idx > r:
+			# 오른쪽 먼저 확장해보기(그냥)
+			if r < right_idx and (l == left_idx or arr[r+1] >= arr[l-1]):
+				r += 1
+				min_height = min(min_height, arr[r])
+			else:
+				l -= 1
+				min_height = min(min_height, arr[l])
+			max_size = max(max_size, min_height * (r - l + 1))
+	
+	return max_size
 
-def get_middle_area(arr, start, mid, end):
-    min_height = arr[mid]
-    max_area = min_height
-    low, high = mid, mid
+# 메인 함수
+def recursive_get_largest_size(arr, left_idx, right_idx):
+	if left_idx > right_idx:
+		return 0
+	
+	# 하나만 남은 경우
+	if left_idx == right_idx:
+		return arr[left_idx]
+	
+	# 마법의 요정 구간
+	mid_idx = (left_idx + right_idx) // 2
+	left_side_size = recursive_get_largest_size(arr, left_idx, mid_idx - 1)
+	right_side_size = recursive_get_largest_size(arr, mid_idx + 1, right_idx)
+	mid_crossing_size = get_crossing_size(arr, left_idx, right_idx, mid_idx)
+	
+	return max(left_side_size, right_side_size, mid_crossing_size)
 
-    while start < low or end > high:
-        # 오른쪽으로 확장하는 경우
-        if high < end and (low == start or arr[low - 1] < arr[high + 1]):
-            high += 1
-            min_height = min(min_height, arr[high])
-        else:
-            # 왼쪽으로 확장하는 경우
-            low -= 1
-            min_height = min(min_height, arr[low])
 
-        # 현재 넓이 계산
-        width = high - low + 1
-        max_area = max(max_area, min_height * width)
-    
-    return max_area
-    
-def get_max_area(arr, start, end):
-    if start > end:
-        return 0
-    
-    # 막대가 하나인 경우
-    if start == end:
-        return arr[start]
-    
-    mid = (start + end) // 2
-    left_area = get_max_area(arr, start, mid - 1)
-    right_area = get_max_area(arr, mid + 1, end)
-    middle_area = get_middle_area(arr, start, mid, end)
-    
-    return max(left_area, right_area, middle_area)
-
-for arr in inputs:
-    print(get_max_area(arr, 0, len(arr) - 1))
+for i in range(len(inputs)):
+	n, arr = inputs[i]
+	case_result = recursive_get_largest_size(arr, 0, n-1)
+	result.append(case_result)
+	
+print('\n'.join(map(str, result)))
