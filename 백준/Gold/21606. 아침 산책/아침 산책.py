@@ -1,34 +1,42 @@
 import sys
 sys.setrecursionlimit(10**6)
-input = sys.stdin.readline
 
-N = int(input().strip()) # 정점 개수
-A = [0] + list(map(int, input().strip()))
-count = 0 # 가능한 서로 다른 산책 경로의 수
+N = int(input())
+inside = '0' + input()  # 각 노드가 실내(1)인지 실외(0)인지 저장한 문자열
+# 노드 번호를 index로 접근하기 위해 앞에 0 추가
 
-graph = [[] for _ in range(N + 1)]
+graph = [[] for _ in range(N+1)]
+visited = [False] * (N+1)
+total = 0 # 경로의 개수를 저장할 변수
+
+
 for _ in range(N-1):
-    u,v = map(int, input().strip().split())
-    graph[u].append(v)
-    graph[v].append(u) # 무방향 그래프
+    a, b = map(int, sys.stdin.readline().split())
+    graph[a].append(b)
+    graph[b].append(a)
 
-def dfs(graph, arr, node, visited):
-    global count
+    # 두 정점 모두 실내이면 경로의 수 2 증가
+    if inside[a] == "1" and inside[b] == "1":
+        total += 2
 
-    for neighbor in graph[node]:
-        if not visited[neighbor]:
-            if arr[neighbor] == 0:
-                visited[node] = True
-                dfs(graph, arr, neighbor, visited) # 인접노드가 실외인 경우
-            else:
-                visited[node] = True
-                count += 1 # 인접노드가 실내인 경우
+
+def DFS(start):
+    visited[start] = True # 방문 처리
+    inside_count = 0 # 현재 노드와 인접한 실내 노드 개수를 저장할 변수
+    for v in graph[start]:
+        # 인접한 노드가 실내라면
+        if inside[v] == '1': 
+            inside_count += 1 # 실내 노드 개수 증가
+
+        # 인접한 노드가 실외라면
+        elif not visited[v] and inside[i] == "0": # 그 노드에서부터 탐색하여 실내 노드 개수 증가
+            inside_count += DFS(v)
+    return inside_count # 실내 노드 개수 반환
+
 
 for i in range(1, N+1):
-    visited = [False] * (N + 1)
-    
-    # 실내 시작만 고려
-    if A[i] != 0:
-        dfs(graph, A, i, visited)
+    if inside[i] == '0' and not visited[i]: # 시작이 실외일 때만 탐색
+        result = DFS(i) # DFS를 통해 인접한 실내 노드 개수를 계산
+        total += (result) * (result - 1) # 경로의 개수 추가
 
-print(count)
+print(total)
