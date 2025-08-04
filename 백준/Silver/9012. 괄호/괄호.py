@@ -1,27 +1,26 @@
 import sys
 input = sys.stdin.readline
-T = int(input().strip()) # 테스트 케이스 개수
 
-for _ in range(T):
-    parenthesis = list(input().strip())
+N = int(input().strip())
+
+for _ in range(N):
+    is_all_pair = True
+    
     stack = []
-    result = 'YES'
-    
-    # 우선 홀수개면 무조건 답 아님
-    if len(parenthesis) % 2 != 0:
-        print('NO')
-        continue
-    
-    for par in parenthesis:
-        if par == '(':
-            stack.append('(')
+    ps = list(input().strip())
+    for ps_string in ps:
+        if ps_string == '(':
+            stack.append(ps_string)
         else:
-            if not stack:
-                result = 'NO'
+            if stack:
+                stack.pop()
+            else:
+                is_all_pair = False
                 break
-            stack.pop()
 
+    # 여전히 스택에 남아있다면
     if stack:
-        result = 'NO'
-    
-    print(result)
+        is_all_pair = False
+
+    # 결과 출력
+    print('YES' if is_all_pair == True else 'NO')
