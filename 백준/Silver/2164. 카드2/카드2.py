@@ -1,18 +1,12 @@
-# 백준 2164 : 카드 2
-from collections import deque
 import sys
+from collections import deque
 input = sys.stdin.readline
 
 N = int(input().strip())
-queue = deque([i+1 for i in range(N)])
+queue = deque([i for i in range(1, N+1)])
 
-while queue:
-    if len(queue) == 1:
-        print(queue.popleft())
-        break
-    
-    # 1. 맨 앞 숫자 버리기
+while len(queue) >= 2:
     queue.popleft()
-    # 2. 버린 숫자 직후의 숫자는 큐의 맨 뒤로 추가
-    num = queue.popleft()
-    queue.append(num)
+    queue.append(queue.popleft())
+    
+print(queue[-1])
