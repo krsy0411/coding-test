@@ -1,13 +1,12 @@
-n = int(input())
-ropes = []
-result = []
-for _ in range(n):
-# 각 로프의 최대 가능 중량 입력
-  ropes.append(int(input()))
-# 로프들 중 가장 적게 버티는 값이 기준
-ropes.sort(reverse=True)
-# 들 수 있는 최대 중량 구하기 : 최소 감당 무게 * 연결된 로프 개수
-for i in range(n):
-  result.append(ropes[i] * (i+1))
+import sys
+input = sys.stdin.readline
 
-print(max(result))
+N = int(input().strip())
+ropes = [int(input().strip()) for _ in range(N)]
+ropes.sort(reverse=True)
+
+max_weight = -float('inf') # 물체의 최대 중량
+for i, rope in enumerate(ropes):
+    max_weight = max(max_weight, rope * (i + 1)) # 더 작은 무게를 감당 가능한 루프의 무게 * n개
+    
+print(max_weight)
