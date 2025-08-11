@@ -1,32 +1,24 @@
-# 백준 9935 : 프린터 큐
 import sys
 from collections import deque
+
 input = sys.stdin.readline
 
-t = int(input().strip())
-for _ in range(t):
-    n, m = map(int, input().strip().split())
-    queue = list(map(int, input().strip().split()))
-
-    # 중요도와 함께 인덱스를 저장
-    printer_queue = deque([(i, queue[i]) for i in range(n)])
-    count = 0 # 출력된 문서의 개수
+T = int(input().strip())
+while T > 0:
+    N, M = map(int, input().strip().split())
+    nums = deque([(i, num) for i, num in enumerate(map(int, input().strip().split()))])
+    cnt_result = 0 # 문서가 몇 번째로 인쇄되는지
     
-    # 현재 큐의 가장 앞 요소의 중요도를 확인
-    # 가장 앞 요소의 중요도가 가장 큰지 확인
-    while printer_queue:
-        current = printer_queue[0]
-        is_highest = True
-        for i in range(1, len(printer_queue)):
-            if current[1] < printer_queue[i][1]:
-                # 현재 요소보다 더 중요한 요소가 있다면
-                printer_queue.append(printer_queue.popleft())
-                is_highest = False
+    while nums:
+        idx, priority = nums.popleft()
+        
+        if not nums or priority >= max([p for _,p in nums]):
+            cnt_result += 1
+            
+            if idx == M:
+                print(cnt_result)
                 break
-        # 현재 요소가 가장 중요하다면
-        if is_highest:
-            count += 1
-            idx, val = printer_queue.popleft()
-            if idx == m:
-                print(count)
-                break
+        else:
+            nums.append((idx, priority)) # 우선순위가 가장 높지 않다면 다시 뒤로 보내기
+
+    T -= 1
