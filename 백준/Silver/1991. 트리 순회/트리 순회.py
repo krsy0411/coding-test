@@ -1,41 +1,51 @@
-# 백준 1991 : 트리 순회
 import sys
+sys.setrecursionlimit(10**7)
 input = sys.stdin.readline
 
 N = int(input().strip())
+graph = {}
+result = []
 
-tree = {}
-for i in range(N):
-    root, left, right = input().strip().split()
-    tree[root] = (left, right)
+for _ in range(N):
+    current, left, right = map(str, input().strip().split())
+    graph[current] = [left, right]
 
-def preorder(node):
-    if node == '.':
+def recursive_preorder(graph, current, arr):
+    # 기저 조건
+    if current == '.':
         return
     
-    print(node, end='')
-    preorder(tree[node][0])
-    preorder(tree[node][1])
-
-def inorder(node):
-    if node == '.':
+    arr.append(current)
+    recursive_preorder(graph, graph[current][0], arr)
+    recursive_preorder(graph, graph[current][1], arr)
+    
+    return arr
+    
+def recursive_inorder(graph, current, arr):
+    # 기저 조건
+    if current == '.':
         return
     
-    inorder(tree[node][0])
-    print(node, end='')
-    inorder(tree[node][1])
+    recursive_inorder(graph, graph[current][0], arr)
+    arr.append(current)
+    recursive_inorder(graph, graph[current][1], arr)
+    
+    return arr
 
-def postorder(node):
-    if node == '.':
+def recursive_postorder(graph, current, arr):
+    # 기저 조건
+    if current == '.':
         return
     
-    postorder(tree[node][0])
-    postorder(tree[node][1])
-    print(node, end='')
+    recursive_postorder(graph, graph[current][0], arr)
+    recursive_postorder(graph, graph[current][1], arr)
+    arr.append(current)
 
-preorder('A')
-print()
-inorder('A')
-print()
-postorder('A')
-print()
+    return arr
+
+result.append(recursive_preorder(graph, 'A', []))
+result.append(recursive_inorder(graph, 'A', []))
+result.append(recursive_postorder(graph, 'A', []))
+
+for i in range(3):
+    sys.stdout.write(''.join(map(str, result[i])) + '\n')
