@@ -1,20 +1,15 @@
 import sys
-import bisect
 input = sys.stdin.readline
 
 N = int(input().strip())
-sangeun_nums = list(map(int, input().strip().split()))
-sangeun_nums.sort()
+sangeun_nums = set(map(int, input().strip().split()))
 
 M = int(input().strip())
 target_nums = list(map(int, input().strip().split()))
 
 result = []
 for target in target_nums:
-    idx = bisect.bisect_left(sangeun_nums, target)
-
-    # 이진 탐색을 통해 타겟이 존재하는지 확인
-    if (idx < len(sangeun_nums) and (sangeun_nums[idx] == target)):
+    if target in sangeun_nums:
         result.append(1)
     else:
         result.append(0)
