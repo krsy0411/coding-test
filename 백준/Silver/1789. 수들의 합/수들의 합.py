@@ -1,11 +1,15 @@
-s = int(input())
-cnt = 0
-num = 1
-while True:
-  s -= num
-  num += 1
-  cnt += 1
-  if s < num:
-    break
+import sys
+input = sys.stdin.readline
 
-print(cnt)
+S = int(input().strip())
+N = 0 # N의 값 : 서로 다른 자연수들의 개수
+
+while S > 0:
+    N += 1
+    S -= N
+    
+    if S < 0:
+        N -= 1
+        break
+
+print(N)
