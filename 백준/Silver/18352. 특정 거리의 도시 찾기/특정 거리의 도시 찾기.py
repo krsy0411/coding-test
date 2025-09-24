@@ -1,35 +1,40 @@
 import sys
 from collections import deque
+sys.setrecursionlimit(10**6)
+
 input = sys.stdin.readline
 
-N,M,K,X = map(int, input().strip().split())
-visited = [False] * (N+1)
-graph = [[] for _ in range(N+1)]
+# N : 도시의 개수, M : 도로의 개수, K : 거리 정보, X : 출발 도시 번호
+N, M, K, X = map(int, input().strip().split())
+graph = [[] for _ in range(N + 1)] # 인접 리스트
+visited = [False] * (N + 1)
+
 for _ in range(M):
     A, B = map(int, input().strip().split())
-    graph[A].append(B) # 단방향 도로
+    graph[A].append(B) # 단방향 도로(무가중치)
 
-def bfs(graph, visited, node=X):
-    queue = deque([(node,0)]) # (노드 번호, 거리)
-    visited[node] = True # 시작 노드 방문 처리
-    result = [] # 결과 처리용 배열
-
+result = [] # 최단거리가 K인 도시들(= 답)
+def bfs(start):
+    queue = deque([(start, 0)]) # (현재 도시, 현재까지 거리)
+    
+    visited[start] = True # 시작도시(X) 방문처리
     while queue:
-        current_node, current_dist = queue.popleft()
-
-        if current_dist == K:
-            result.append(current_node)
+        node, dist = queue.popleft()
         
-        for neighbor_node in graph[current_node]:
-            if not visited[neighbor_node]:
-                visited[neighbor_node] = True
-                queue.append((neighbor_node, current_dist + 1))
-
-    return sorted(result)
-
-result = bfs(graph, visited, X)
-if not result:
-    print(-1)
+        if dist == K:
+            result.append(node)
+            continue
+        
+        # 현재 도시에서 갈 수 있는 도시들 탐색
+        for next_node in graph[node]:
+            # 방문하지 않은 도시라면, 큐에 추가하고 방문처리
+            if not visited[next_node]:
+                visited[next_node] = True
+                queue.append((next_node, dist + 1))
+                
+bfs(X)
+if result:
+    result.sort()
+    sys.stdout.write('\n'.join(map(str, result)))
 else:
-    for node in result:
-        print(node)
+    sys.stdout.write('-1')
