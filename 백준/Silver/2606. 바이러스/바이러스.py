@@ -1,25 +1,35 @@
 import sys
+from collections import deque
+
 input = sys.stdin.readline
 
-N = int(input().strip())
-M = int(input().strip())
-graph = [[] for _ in range(N + 1)]
+computer_nums = int(input().strip())
+pairs_num = int(input().strip())
 
-for _ in range(M):
-    u, v = map(int, input().strip().split())
-    graph[u].append(v)
-    graph[v].append(u)
+graph = [[] for _ in range(computer_nums+ 1)]
+for _ in range(pairs_num):
+    a, b = map(int, input().strip().split())
     
-visited = [False] * (N + 1)
-count = 0
-def dfs(node, visited):
-    global count
-    
+    graph[a].append(b)
+    graph[b].append(a)
+
+result = 0
+visited = [False for _ in range(computer_nums + 1)]
+def virus_search(node, answer):
+    queue = deque([]) # 큐 초기화
+    queue.append(node) # 초기 노드를 힙에 추가
     visited[node] = True
-    for neighbor in graph[node]:
-        if not visited[neighbor]:
-            count += 1
-            dfs(neighbor, visited)
+    
+    while queue:
+        pop_node = queue.popleft()
+        
+        for next_node in graph[pop_node]:
+            if visited[next_node] == False:
+                visited[next_node] = True
+                queue.append(next_node)
+                answer += 1
+    
+    return answer
 
-dfs(1, visited)
-print(count)
+result = virus_search(1, 0)
+sys.stdout.write(f"{result}")
