@@ -1,27 +1,24 @@
 import sys
-sys.setrecursionlimit(10**7)
+sys.setrecursionlimit(10**6)
 input = sys.stdin.readline
 
-N = int(input().strip()) # 노드 개수
-parent = [0] * (N+1)
-graph = [[] for _ in range(N+1)]
-visited = [False] * (N+1)
+N = int(input().strip())
 
-# 간선(연결관계) 설정
+graph = [[] for _ in range(N + 1)]
 for _ in range(N-1):
-    u,v = map(int, input().strip().split())
-    graph[u].append(v)
-    graph[v].append(u)
+    a, b = map(int, input().strip().split())
+    graph[a].append(b)
+    graph[b].append(a)
     
-# DFS 수행
-def recursive_search(graph, parent, visited, node):
-    visited[node] = True
-    
+parent_info = [-1] * (N + 1)
+def recursive_search_parent_node(node, parent_info):
     for next_node in graph[node]:
-        if not visited[next_node]:
-            parent[next_node] = node
-            recursive_search(graph, parent, visited, next_node)
-            
-# 결과 출력
-recursive_search(graph, parent, visited, 1)
-sys.stdout.write('\n'.join(map(str, parent[2:])) + '\n')
+        if parent_info[next_node] is -1:
+            parent_info[next_node] = node
+            recursive_search_parent_node(next_node, parent_info)
+    
+    return
+
+recursive_search_parent_node(1, parent_info)
+for i in range(2, N+1):
+    print(parent_info[i])
