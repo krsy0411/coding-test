@@ -1,47 +1,43 @@
-# 백준 2504 : 괄호의 값
 import sys
 input = sys.stdin.readline
 
-brackets = list(input().strip()) # 괄호열
-stack = [] # 열린괄호들을 쌓아두는 스택
-result = 0
-temp_result = 1
+galhos = list(input().strip())
+result = 0 # 결과값
+temp_result = 1 # 괄호값을 임시 반영하기 위한 변수
 
-for i in range(len(brackets)):
-    bracket = brackets[i]
-    
-    if bracket == '(':
-        stack.append(bracket)
-        temp_result *= 2
-    elif bracket == '[':
-        stack.append(bracket)
-        temp_result *= 3
-    elif bracket == ')':
-        # 스택이 비어있거나 괄호쌍이 안 맞는 경우
-        if (not stack) or (stack[-1] != '('):
-            result = 0
-            break
-        
-        # 바로 이전 문자가 열린 괄호라면
-        if brackets[i-1] == '(':
-            result += temp_result
+stack = []
+for i in range(len(galhos)):
+	galho = galhos[i]
+	
+	if galho == '(':
+		stack.append(galho)
+		temp_result *= 2
+	elif galho == '[':
+		stack.append(galho)
+		temp_result *= 3
+	elif galho == ')':
+		if (not stack) or (stack[-1] != '('):
+			result = 0
+			break
+		
+		if galhos[i-1] == '(':
+			result += temp_result
+			
+		stack.pop()
+		temp_result //= 2
+	elif galho == ']':
+		if (not stack) or (stack[-1] != '['):
+			result = 0
+			break
+	
+		if galhos[i-1] == '[':
+			result += temp_result
+			
+		stack.pop()
+		temp_result //= 3
 
-        temp_result //= 2
-        stack.pop()
-    elif bracket == ']':
-        # 스택이 비어있거나 괄호쌍이 안 맞는 경우
-        if (not stack) or (stack[-1] != '['):
-            result = 0
-            break
-        
-        # 바로 이전 문자가 열린 괄호라면
-        if brackets[i-1] == '[':
-            result += temp_result
-            
-        temp_result //= 3
-        stack.pop()
-        
-# 아직 스택에 열린 괄호가 남았다면
+# 마지막 검증 : 아직 스택이 안 비었다면 0 출력
 if stack:
-    result = 0
-print(result)
+	print(0)
+else:
+	print(result)
